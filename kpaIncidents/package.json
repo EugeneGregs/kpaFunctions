@@ -1,0 +1,10 @@
+{
+    "name": "kpa",
+    "version": "1.0.0",
+    "description": "kpa azure function",
+    "author": "M2M Systems",
+    "license": "ISC",
+    "dependencies": {
+        "mssql": "^4.3.2"
+    }
+}
