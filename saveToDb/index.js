@@ -47,7 +47,7 @@ module.exports = function (context, req) {
         incident_category = "Personnel";
         const incident_status = 1;
         
-        var userIdshort = from_user_id.substr(10,3);
+        var userIdshort = from_user_id.split("-")[1];
         var timspshort = incident_date_and_time.toString().substr(4);
         incident_id = userIdshort + "-" + timspshort;
 
@@ -227,7 +227,7 @@ module.exports = function (context, req) {
             "incident_id": incident_id
         }
         const options = {
-            uri: 'http://localhost:7071/api/sendActioncard',
+            uri: 'https://kpaincidentsfunc.azurewebsites.net/api/sendActioncard?code=CGqJPc8VjhAsVXrAiivzg2BSPUEHU7ecI2mSwCoIWaymZ8REl8Xy1w==',
             method: 'POST',
             json: data
         };

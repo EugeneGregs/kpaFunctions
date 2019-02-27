@@ -23,7 +23,7 @@ module.exports = function (context, req) {
 
     };
     const options = {
-        uri: "http://localhost:7071/api/authKaizala",
+        uri: "https://kpaincidentsfunc.azurewebsites.net/api/authKaizala?code=7RdL2taMnJ1YlwDFsTwz87ODa9xGKKEgNNi1ZNZZC6gKYblYeiRsbQ==",
         method: "POST",
         json: authDetails
     }
