@@ -86,6 +86,7 @@ module.exports = function (context, req) {
                 context.log(error)
             } else if(!error && response.statusCode == 200) {
                 context.log("Done");
+                context.done();
             }
         })
     }
