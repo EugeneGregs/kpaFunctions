@@ -42,6 +42,8 @@ module.exports = function (context, req) {
         }).then(result => {
             sql.close();
             updateCardId = result.recordset[0].update_action_id;
+            context.log(result)
+            context.log(query)
             getAccessToken();
         }).catch(err => {
             context.log(err)
