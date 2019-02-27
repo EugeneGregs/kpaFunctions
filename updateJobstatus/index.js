@@ -8,7 +8,7 @@ module.exports = function (context, req) {
 
         //Use assigned to to get info of assigned officer from the officers table 
         var options = {
-            uri: 'http://localhost:7071/api/getOfficerDetails',
+            uri: 'https://kpaincidentsfunc.azurewebsites.net/api/getOfficerDetails?code=Mm/jHQcQH/IhUTe0fXq7DEHRUo8knw6U7Vwmhz3N3iKPazp/d45Uxg==',
             method: 'POST',
             json: req.body
         };
@@ -27,7 +27,7 @@ module.exports = function (context, req) {
 
     else if (req.body.eventType == "JobResponse") {
         var options = {
-            uri: 'http://localhost:7071/api/changeJobStatus',
+            uri: 'https://kpaincidentsfunc.azurewebsites.net/api/changeJobStatus?code=7mRUBMdSDW4owEawfjOnPmpuHftDem8s75vH7Lz9jkTxb0xxKRTR/Q==',
             method: 'POST',
             json: req.body
         };
