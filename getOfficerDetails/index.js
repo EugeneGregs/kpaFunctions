@@ -4,8 +4,9 @@ module.exports = function (context, req) {
 
     context.log('Function Started');
 
+    var incidentNumber = 0;
+    var status = 0;
     let officer_phone_number = req.body.data.assignedTo[0];
-    let reporting_person_phone = req.body.fromUser;
     var officer_id = 0;
     let job_card_id = req.body.data.actionId;
     let theArray = req.body.data.title.split(' ');
@@ -27,6 +28,7 @@ module.exports = function (context, req) {
 
 
     function getOfficerDetails() {
+        context.log("getOfficerDetails");
 
         var query = `SELECT * FROM dbo.kpa_officers WHERE officer_phone_number='${officer_phone_number}'`;
 
@@ -35,14 +37,20 @@ module.exports = function (context, req) {
     }
 
     function updateIncidentsTable() {
+        context.log("updateIncidentsTable");
         var query = `UPDATE dbo.kpa_incidents SET officer_assigned_id = ${officer_id}, jobcard_id = '${job_card_id}', incident_status = 2 WHERE incident_number = '${incident_id}'`;
 
 
         updateDb(query);
+
+        
+
+
     }
 
     // function to query officer details from the officers table
     function getFromDb(query) {
+        context.log("getFromDB");
         context.log(query);
         sql.connect(config).then(() => {
 
@@ -85,7 +93,7 @@ module.exports = function (context, req) {
         })
 
     }
-
+    
     // function to update officer details in the incidents table
     function updateDb(query) {
         sql.close();
@@ -97,10 +105,11 @@ module.exports = function (context, req) {
             return sql.query(query)
 
         }).then(() => {
-            context.log("Reached this 2nd  point")
-            sql.close()
-            context.done()
 
+            // sql.close()
+            context.log("Start the retrieve data function")
+            sendData();            
+                        
         }).catch(err => {
             context.log(err)
 
@@ -121,6 +130,42 @@ module.exports = function (context, req) {
             context.done()
         })
 
+
+    }
+
+    function sendData(){
+        sql.close();
+        context.log("sendData");
+        //This retrieves job status and incident number data for eugene
+        //send details to change status text
+
+        const data = {
+            "incidentNumber": incident_id,
+            "status": 2
+        }
+
+        const option ={
+            uri: 'http://localhost:7071/api/changeStatus',
+                method: 'POST',
+                json: data
+        }
+
+        request(option, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                context.res = {
+                    body: body
+                }
+                context.log("Done Finally")
+                context.done();
+            }
+        });
+
+        // var query = `SELECT incident_status, incident_number FROM dbo.kpa_incidents WHERE jobcard_id='${job_card_id}'`;
+
+        // context.log("Start the get incidents from db function")
+        // getFromIncidentsDb(query);      
+        
+        //This retrieves data for eugene
     }
 
 

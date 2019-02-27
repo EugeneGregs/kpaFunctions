@@ -191,7 +191,7 @@ module.exports = function (context, req) {
     function sendActionToUserWithoutError(){
         const data = {
             "groupId": "ec8b65a6-a746-4000-ae64-92c84c102e5c",
-            "subscriberNumber": /* reporting_person_phone */ "+254784197822",
+            "subscriberNumber": reporting_person_phone,
             "propertiesArray": [
                 {
                     "name":"incidentCategory",
