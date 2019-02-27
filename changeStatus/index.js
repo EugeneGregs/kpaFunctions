@@ -42,6 +42,8 @@ module.exports = function (context, req) {
         }).then(result => {
             sql.close();
             updateCardId = result.recordset[0].update_action_id;
+            context.log(result)
+            context.log(query)
             getAccessToken();
         }).catch(err => {
             context.log(err)
@@ -86,6 +88,7 @@ module.exports = function (context, req) {
                 context.log(error)
             } else if(!error && response.statusCode == 200) {
                 context.log("Done");
+                context.done();
             }
         })
     }
