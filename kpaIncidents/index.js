@@ -28,9 +28,9 @@ module.exports = function (context, req) {
             });
         } else if(req.body.eventType == "JobResponse" || req.body.eventType == "JobCreated"){
             var options = {
-                uri: 'http://localhost:7071/api/updateJobstatus',
+                uri: 'https://kpaincidentsfunc.azurewebsites.net/api/updateJobstatus?code=DPzH8QaNNB61NZeY603DHHm9Yfe3bxVDR8yGAHD3cePuGUaCy555FA==',
                 method: 'POST',
-                json: req.query.body
+                json: req.body
             };
 
             request(options, function (error, response, body) {
