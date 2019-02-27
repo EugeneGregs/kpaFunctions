@@ -24,15 +24,15 @@ module.exports = function (context, req) {
     function changeJobStatus() {
         if (isCompleted){
             var query = `UPDATE dbo.kpa_incidents SET incident_status = 5 WHERE jobcard_id = '${job_card_id}'`;
+            updateDb(query, 5);
         }else{
             var query = `UPDATE dbo.kpa_incidents SET incident_status = 3 WHERE jobcard_id = '${job_card_id}'`;
+            updateDb(query, 3);
         }
-
-        updateDb(query);
     }
 
     // function to update job status in the incidents table
-    function updateDb(query) {
+    function updateDb(query, status) {
         context.log(query);
         sql.connect(config).then(() => {
             context.log("Reached this 1st  point")  
@@ -40,7 +40,8 @@ module.exports = function (context, req) {
         }).then(() => {                      
             context.log("Reached this 2nd  point")  
             sql.close()
-            context.done()
+            sendData(status)
+            // context.done()
 
         }).catch(err => {
             context.log(err)
@@ -61,6 +62,31 @@ module.exports = function (context, req) {
             sql.close()
             context.done()
         })
+    }
+
+    function sendData(status){
+
+        const data = {
+            "cardId": job_card_id,
+            "status": status
+        }
+
+        const option = {
+            uri: 'http://localhost:7071/api/changeStatus',
+                method: 'POST',
+                json: data
+        }
+
+        request(option, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                context.res = {
+                    body: body
+                }
+                context.log("Done Finally")
+                context.done();
+            }
+        });
+
     }
 
 

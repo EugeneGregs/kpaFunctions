@@ -28,6 +28,7 @@ module.exports = function (context, req) {
 
 
     function getOfficerDetails() {
+        context.log("getOfficerDetails");
 
         var query = `SELECT * FROM dbo.kpa_officers WHERE officer_phone_number='${officer_phone_number}'`;
 
@@ -36,6 +37,7 @@ module.exports = function (context, req) {
     }
 
     function updateIncidentsTable() {
+        context.log("updateIncidentsTable");
         var query = `UPDATE dbo.kpa_incidents SET officer_assigned_id = ${officer_id}, jobcard_id = '${job_card_id}', incident_status = 2 WHERE incident_number = '${incident_id}'`;
 
 
@@ -48,6 +50,7 @@ module.exports = function (context, req) {
 
     // function to query officer details from the officers table
     function getFromDb(query) {
+        context.log("getFromDB");
         context.log(query);
         sql.connect(config).then(() => {
 
@@ -90,74 +93,7 @@ module.exports = function (context, req) {
         })
 
     }
-
-    // function to query job status and incidentNumber from the incidents table
-    function getFromIncidentsDb(query) {
-        sql.close()
-        context.log(query);
-        sql.connect(config).then(() => {
-
-            return sql.query(query)
-            
-
-        }).then(result => {
-            let idArray = Object.values(result.recordsets[0][0]);
-
-            incidentNumber = idArray[0]
-            status = idArray[1]
-
-            context.log("8888888888888888888888888888888888888888888888888888")
-            context.log(incidentNumber+ ' '+ status)
-            context.log('8888888888888888888888888888888888888888888888888888')
-
-            var options = {
-                uri: 'http://localhost:7071/api/changeStatus',
-                method: 'POST',
-                json: {
-                    "incidentNumber": incidentNumber,
-                    "status": status
-                }
-            };
-            request(options, function (error, response, body) {
-                if (!error && response.statusCode == 200) {
-                    context.res = {
-                        body: body
-                    }
     
-                    context.done();
-                }
-            });
-
-            // complete details from the select * sql command;
-
-            context.res = {
-                body: result
-            };
-
-            // sql.close()
-            // context.done()
-        }).catch(err => {
-            context.log(err)
-            // sendActionToUserWithError();
-            context.res = {
-                body: err
-            }
-            sql.close()
-            context.done()
-        })
-
-        sql.on('error', err => {
-            context.log(err)
-            // sendActionToUserWithError();
-            context.res = {
-                body: err
-            }
-            sql.close()
-            context.done()
-        })
-
-    }
-
     // function to update officer details in the incidents table
     function updateDb(query) {
         sql.close();
@@ -171,13 +107,9 @@ module.exports = function (context, req) {
         }).then(() => {
 
             // sql.close()
-
             context.log("Start the retrieve data function")
             sendData();            
-
-            
-            context.done()
-
+                        
         }).catch(err => {
             context.log(err)
 
@@ -202,6 +134,8 @@ module.exports = function (context, req) {
     }
 
     function sendData(){
+        sql.close();
+        context.log("sendData");
         //This retrieves job status and incident number data for eugene
         //send details to change status text
 
@@ -221,7 +155,7 @@ module.exports = function (context, req) {
                 context.res = {
                     body: body
                 }
-
+                context.log("Done Finally")
                 context.done();
             }
         });
