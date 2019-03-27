@@ -145,7 +145,7 @@ module.exports = function (context, req) {
         }
 
         const option ={
-            uri: 'http://localhost:7071/api/changeStatus',
+            uri: 'https://kpaincidentsfunc.azurewebsites.net/api/changeStatus?code=uarbX5A0zMgdGmOSMRwcju/B3v5JHX7wKFOMj2OxvZAaPP8AJXmYzA==',
                 method: 'POST',
                 json: data
         }

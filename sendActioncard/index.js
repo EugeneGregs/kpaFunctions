@@ -22,14 +22,16 @@ module.exports = function (context, req) {
         "refreshToken": refreshToken//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cm46bWljcm9zb2Z0OmNyZWRlbnRpYWxzIjoie1wicGhvbmVOdW1iZXJcIjpcIisyNTQ3MDU1NTAwNjRcIixcImNJZFwiOlwiXCIsXCJ0ZXN0U2VuZGVyXCI6XCJmYWxzZVwiLFwiYXBwTmFtZVwiOlwiY29tLm1pY3Jvc29mdC5tb2JpbGUua2FpemFsYWFwaVwiLFwiYXBwbGljYXRpb25JZFwiOlwiNjI5MjM5NmEtYmFiNy00ZjU3LTlmMWQtNWQxZTJjZTkyMTVhXCIsXCJwZXJtaXNzaW9uc1wiOlwiOC40XCIsXCJhcHBsaWNhdGlvblR5cGVcIjotMSxcImRhdGFcIjpcIntcXFwiQXBwTmFtZVxcXCI6XFxcIkphbWlpIFRlbGtvbVxcXCJ9XCJ9IiwidWlkIjoiTW9iaWxlQXBwc1NlcnZpY2U6ZjJjODhiZGYtZWI4OS00NzIxLWI2MTUtOTc2ODYxMDQ0NDJiIiwidmVyIjoiMiIsIm5iZiI6MTU1MDQ5NjY1MywiZXhwIjoxNTgyMDMyNjUzLCJpYXQiOjE1NTA0OTY2NTMsImlzcyI6InVybjptaWNyb3NvZnQ6d2luZG93cy1henVyZTp6dW1vIiwiYXVkIjoidXJuOm1pY3Jvc29mdDp3aW5kb3dzLWF6dXJlOnp1bW8ifQ.wGByd_0lm4cwm_wgx59UGzK9mB8L_WasX_rxH1FQZek"
 
     };
+    context.log(JSON.stringify(authDetails));
     const options = {
-        uri: "https://kpaincidentsfunc.azurewebsites.net/api/authKaizala?code=7RdL2taMnJ1YlwDFsTwz87ODa9xGKKEgNNi1ZNZZC6gKYblYeiRsbQ==",
+        uri: /*'http://localhost:7071/api/authKaizala',*/ "https://kpaincidentsfunc.azurewebsites.net/api/authKaizala?code=7RdL2taMnJ1YlwDFsTwz87ODa9xGKKEgNNi1ZNZZC6gKYblYeiRsbQ==",
         method: "POST",
         json: authDetails
     }
 
     //Get Kaizala access Token
     request(options, function(error, response, body){
+        context.log("Getting access token...");
         if(!error && response.statusCode == 200) {
             accessToken = body;
             context.log(accessToken);
@@ -40,6 +42,7 @@ module.exports = function (context, req) {
 
     //send action card
     function sendCard() {
+        context.log("Sending card ...");
         let actionBodyObj;
 
         if(isSendToAll == true || isSendToAll == "true") {
@@ -78,10 +81,13 @@ module.exports = function (context, req) {
                 context.done();
             } else if(response.statusCode == 200){
                 context.log("Card sent");
-                bodyObj = (typeof body == "object" && typeof body != null) ? body : JSON.parse(body);
-                update_action_id = bodyObj.actionId;
-                updateCardIdToDb();
-                // context.done();
+               
+                if(incident_id) {
+                    bodyObj = (typeof body == "object" && typeof body != null) ? body : JSON.parse(body);
+                    update_action_id = bodyObj.actionId;
+                    updateCardIdToDb();
+                } 
+                context.done();
             }
         });
     }

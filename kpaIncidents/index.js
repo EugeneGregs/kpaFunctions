@@ -10,16 +10,18 @@ module.exports = function (context, req) {
         context.done();
     } else{
         context.log("Am in...");
+        context.log(req.body.eventType);
         if(req.body.eventType == "ActionResponse" || req.body.eventType == "SurveyResponse" || req.body.eventType == "ActionCreated"){
+            context.log("In 2...");
             var options = {
-                uri: 'https://kpaincidentsfunc.azurewebsites.net/api/saveToDb?code=Rqo4Uonj2SxUqay6bpgCNmhcqiwRU7zcr71MV5jJvNPrdTFRxaZRvg==',
+                uri: /*'http://localhost:7071/api/saveToDb',*/ 'https://kpaincidentsfunc.azurewebsites.net/api/saveToDb?code=Rqo4Uonj2SxUqay6bpgCNmhcqiwRU7zcr71MV5jJvNPrdTFRxaZRvg==',
                 method: 'POST',
                 json: req.body
             };
 
             request(options, function (error, response, body) {
+                context.log("Done");
                 if (!error && response.statusCode == 200) {
-                //   context.log("Done");
                 context.res = {
                     body: body
                 }
